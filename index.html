@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pac-Man</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        canvas { background-color: black; }
+    </style>
+</head>
+<body>
+    <h2>Pontuação: <span id="score">0</span></h2>
+    <canvas id="gameCanvas" width="480" height="320"></canvas>
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        //contexto 2d
+        const ctx = canvas.getContext("2d");
+
+        const tileSize = 32;
+        let score = 0;
+
+        // Pac-Man
+        const pacman = { x: tileSize, y: tileSize, size: tileSize / 2.5, speed: 3, dx: 0, dy: 0 };
+
+        // Fantasmas
+        const ghosts = [
+            { x: 6 * tileSize, y: 4 * tileSize, size: tileSize / 2.5, speed: 1, dx: 1, dy: 0, color: "red" },
+            { x: 10 * tileSize, y: 2 * tileSize, size: tileSize / 2.5, speed: 1, dx: -1, dy: 0, color: "pink" }
+        ];
+
+        // Mapa do jogo (1 = parede, 2 = ponto, 0 = caminho)
+        const map = [
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 0, 2, 0, 2, 0, 1, 0, 2, 0, 0, 0, 2, 0, 1],
+            [1, 0, 1, 1, 1, 0, 1, 2, 1, 1, 1, 1, 0, 1, 1],
+            [1, 0, 1, 2, 0, 0, 1, 0, 0, 2, 0, 1, 0, 0, 1],
+            [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 0, 1],
+            [1, 0, 2, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        ];
+
+        function drawMap() {
+            for (let row = 0; row < map.length; row++) {
+                for (let col = 0; col < map[row].length; col++) {
+                    if (map[row][col] === 1) {
+                        ctx.fillStyle = "blue";
+                        ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
+                    } else if (map[row][col] === 2) {
+                        ctx.fillStyle = "white";
+                        ctx.beginPath();
+                        ctx.arc(col * tileSize + tileSize / 2, row * tileSize + tileSize / 2, 4, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+            }
+        }
+
+        function drawPacMan() {
+            ctx.fillStyle = "yellow";
+            ctx.beginPath();
+            ctx.arc(pacman.x + tileSize / 2, pacman.y + tileSize / 2, pacman.size, 0.2 * Math.PI, 1.8 * Math.PI);
+            ctx.lineTo(pacman.x + tileSize / 2, pacman.y + tileSize / 2);
+            ctx.fill();
+        }
+
+        function drawGhosts() {
+            ghosts.forEach(ghost => {
+                ctx.fillStyle = ghost.color;
+                ctx.beginPath();
+                ctx.arc(ghost.x + tileSize / 2, ghost.y + tileSize / 2, ghost.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function movePacMan() {
+            pacman.x += pacman.dx;
+            pacman.y += pacman.dy;
+        }
+
+        function moveGhosts() {
+            ghosts.forEach(ghost => {
+                let nextX = ghost.x + ghost.dx * ghost.speed;
+                let nextY = ghost.y + ghost.dy * ghost.speed;
+
+                let col = Math.floor(nextX / tileSize);
+                let row = Math.floor(nextY / tileSize);
+
+                if (map[row][col] === 1) {
+                    ghost.dx = -ghost.dx;
+                    ghost.dy = -ghost.dy;
+                } else {
+                    ghost.x = nextX;
+                    ghost.y = nextY;
+                }
+            });
+        }
+
+        function checkCollision() {
+            const col = Math.floor(pacman.x / tileSize);
+            const row = Math.floor(pacman.y / tileSize);
+
+            if (map[row][col] === 1) {
+                pacman.x -= pacman.dx;
+                pacman.y -= pacman.dy;
+            } else if (map[row][col] === 2) {
+                map[row][col] = 0;
+                score += 10;
+                document.getElementById("score").innerText = score;
+            }
+
+            // Verifica colisão com fantasmas
+            ghosts.forEach(ghost => {
+                if (Math.abs(pacman.x - ghost.x) < tileSize / 2 && Math.abs(pacman.y - ghost.y) < tileSize / 2) {
+                    alert("Game Over!");
+                    document.location.reload();
+                }
+            });
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawMap();
+            movePacMan();
+            moveGhosts();
+            checkCollision();
+            drawPacMan();
+            drawGhosts();
+            requestAnimationFrame(gameLoop);
+        }
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "keyW") { pacman.dx = 0; pacman.dy = -pacman.speed; }
+            if (event.key === "keyS") { pacman.dx = 0; pacman.dy = pacman.speed; }
+            if (event.key === "KeyA") { pacman.dx = -pacman.speed; pacman.dy = 0; }
+            if (event.key === "KeyD") { pacman.dx = pacman.speed; pacman.dy = 0; }
+            if (event.key === "ArrowUp") { pacman.dx = 0; pacman.dy = -pacman.speed; }
+            if (event.key === "ArrowDown") { pacman.dx = 0; pacman.dy = pacman.speed; }
+            if (event.key === "ArrowLeft") { pacman.dx = -pacman.speed; pacman.dy = 0; }
+            if (event.key === "ArrowRight") { pacman.dx = pacman.speed; pacman.dy = 0; }
+        });
+
+        document.addEventListener("keyup", () => { pacman.dx = 0; pacman.dy = 0; });
+
+        gameLoop();
+    </script>
+</body>
+</html>
