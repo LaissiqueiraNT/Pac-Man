@@ -11,22 +11,45 @@
 </head>
 <body>
     <h2>Pontuação: <span id="score">0</span></h2>
-    <canvas id="gameCanvas" width="480" height="320"></canvas>
+    <canvas id="gameCanvas" width="480" height="320">
+        
+    </canvas>
     <script>
         const canvas = document.getElementById("gameCanvas");
         //contexto 2d
         const ctx = canvas.getContext("2d");
-
         const tileSize = 32;
         let score = 0;
 
         // Pac-Man
-        const pacman = { x: tileSize, y: tileSize, size: tileSize / 2.5, speed: 3, dx: 0, dy: 0 };
+        const pacman = { 
+            x: tileSize,
+            y: tileSize,
+            size: tileSize / 2.5,
+            speed: 2.5,
+            dx: 0,
+            dy: 0
+         };
 
         // Fantasmas
         const ghosts = [
-            { x: 6 * tileSize, y: 4 * tileSize, size: tileSize / 2.5, speed: 1, dx: 1, dy: 0, color: "red" },
-            { x: 10 * tileSize, y: 2 * tileSize, size: tileSize / 2.5, speed: 1, dx: -1, dy: 0, color: "pink" }
+            { 
+            x: 6 * tileSize,
+            y: 4 * tileSize, 
+            size: tileSize / 2.5, 
+            speed: 1, 
+            dx: 1, 
+            dy: 0, 
+            color: "red" },
+
+            {
+            x: 10 * tileSize,
+            y: 2 * tileSize,
+            size: tileSize / 2.5, 
+            speed: 1, 
+            dx: -1, 
+            dy: 0, 
+            color: "pink" }
         ];
 
         // Mapa do jogo (1 = parede, 2 = ponto, 0 = caminho)
@@ -42,7 +65,9 @@
 
         function drawMap() {
             for (let row = 0; row < map.length; row++) {
+
                 for (let col = 0; col < map[row].length; col++) {
+
                     if (map[row][col] === 1) {
                         ctx.fillStyle = "blue";
                         ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
@@ -96,6 +121,8 @@
             });
         }
 
+ 
+
         function checkCollision() {
             const col = Math.floor(pacman.x / tileSize);
             const row = Math.floor(pacman.y / tileSize);
@@ -117,6 +144,42 @@
                 }
             });
         }
+function moveGhosts() {
+        ghosts.forEach(ghost => {
+            let bestDx = 0, bestDy = 0;
+            let bestDist = Infinity;
+
+            // Testa as 4 direções (cima, baixo, esquerda, direita)
+            let directions = [
+                { dx: -1, dy: 0 }, // Esquerda
+                { dx: 1, dy: 0 },  // Direita
+                { dx: 0, dy: -1 }, // Cima
+                { dx: 0, dy: 1 }   // Baixo
+            ];
+
+            directions.forEach(dir => {
+                let nextX = ghost.x + dir.dx * tileSize;
+                let nextY = ghost.y + dir.dy * tileSize;
+                let col = Math.floor(nextX / tileSize);
+                let row = Math.floor(nextY / tileSize);
+
+                // Verifica se a próxima posição NÃO é uma parede
+                if (map[row][col] !== 1) {
+                    let dist = Math.sqrt((nextX - pacman.x) ** 2 + (nextY - pacman.y) ** 2);
+                    if (dist < bestDist) {
+                        bestDist = dist;
+                        bestDx = dir.dx;
+                        bestDy = dir.dy;
+                    }
+                }
+            });       
+            // Atualiza posição do fantasma
+            ghost.dx = bestDx;
+            ghost.dy = bestDy;
+            ghost.x += ghost.dx * ghost.speed;
+            ghost.y += ghost.dy * ghost.speed;
+        });
+    }
 
         function gameLoop() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -130,10 +193,10 @@
         }
 
         document.addEventListener("keydown", (event) => {
-            if (event.key === "keyW") { pacman.dx = 0; pacman.dy = -pacman.speed; }
-            if (event.key === "keyS") { pacman.dx = 0; pacman.dy = pacman.speed; }
-            if (event.key === "KeyA") { pacman.dx = -pacman.speed; pacman.dy = 0; }
-            if (event.key === "KeyD") { pacman.dx = pacman.speed; pacman.dy = 0; }
+            // if (event.key === "keyW") { pacman.dx = 0; pacman.dy = -pacman.speed; }
+            // if (event.key === "keyS") { pacman.dx = 0; pacman.dy = pacman.speed; }
+            // if (event.key === "KeyA") { pacman.dx = -pacman.speed; pacman.dy = 0; }
+            // if (event.key === "KeyD") { pacman.dx = pacman.speed; pacman.dy = 0; }
             if (event.key === "ArrowUp") { pacman.dx = 0; pacman.dy = -pacman.speed; }
             if (event.key === "ArrowDown") { pacman.dx = 0; pacman.dy = pacman.speed; }
             if (event.key === "ArrowLeft") { pacman.dx = -pacman.speed; pacman.dy = 0; }
