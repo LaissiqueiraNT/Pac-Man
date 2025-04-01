@@ -11,7 +11,7 @@
 </head>
 <body>
     <h2>Pontuação: <span id="score">0</span></h2>
-    <canvas id="gameCanvas" width="480" height="320">
+    <canvas id="gameCanvas" width="992" height="608">
         
     </canvas>
     <script>
@@ -54,13 +54,25 @@
 
         // Mapa do jogo (1 = parede, 2 = ponto, 0 = caminho)
         const map = [
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 0, 2, 0, 2, 0, 1, 0, 2, 0, 0, 0, 2, 0, 1],
-            [1, 0, 1, 1, 1, 0, 1, 2, 1, 1, 1, 1, 0, 1, 1],
-            [1, 0, 1, 2, 0, 0, 1, 0, 0, 2, 0, 1, 0, 0, 1],
-            [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 0, 1],
-            [1, 0, 2, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 0, 2, 0, 2, 0, 1, 0, 2, 0, 0, 0, 2, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 2, 0, 2, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 1, 1, 1, 0, 1, 2, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 1, 2, 0, 0, 1, 0, 0, 2, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 2, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
         ];
 
         function drawMap() {
@@ -144,48 +156,48 @@
                 }
             });
         }
-function moveGhosts() {
-        ghosts.forEach(ghost => {
-            let bestDx = 0, bestDy = 0;
-            let bestDist = Infinity;
+// function moveGhosts() {
+//         ghosts.forEach(ghost => {
+//             let bestDx = 0, bestDy = 0;
+//             let bestDist = Infinity;
 
-            // Testa as 4 direções (cima, baixo, esquerda, direita)
-            let directions = [
-                { dx: -1, dy: 0 }, // Esquerda
-                { dx: 1, dy: 0 },  // Direita
-                { dx: 0, dy: -1 }, // Cima
-                { dx: 0, dy: 1 }   // Baixo
-            ];
+//             // Testa as 4 direções (cima, baixo, esquerda, direita)
+//             let directions = [
+//                 { dx: -1, dy: 0 }, // Esquerda
+//                 { dx: 1, dy: 0 },  // Direita
+//                 { dx: 0, dy: -1 }, // Cima
+//                 { dx: 0, dy: 1 }   // Baixo
+//             ];
 
-            directions.forEach(dir => {
-                let nextX = ghost.x + dir.dx * tileSize;
-                let nextY = ghost.y + dir.dy * tileSize;
-                let col = Math.floor(nextX / tileSize);
-                let row = Math.floor(nextY / tileSize);
+//             directions.forEach(dir => {
+//                 let nextX = ghost.x + dir.dx * tileSize;
+//                 let nextY = ghost.y + dir.dy * tileSize;
+//                 let col = Math.floor(nextX / tileSize);
+//                 let row = Math.floor(nextY / tileSize);
 
-                // Verifica se a próxima posição NÃO é uma parede
-                if (map[row][col] !== 1) {
-                    let dist = Math.sqrt((nextX - pacman.x) ** 2 + (nextY - pacman.y) ** 2);
-                    if (dist < bestDist) {
-                        bestDist = dist;
-                        bestDx = dir.dx;
-                        bestDy = dir.dy;
-                    }
-                }
-            });       
-            // Atualiza posição do fantasma
-            ghost.dx = bestDx;
-            ghost.dy = bestDy;
-            ghost.x += ghost.dx * ghost.speed;
-            ghost.y += ghost.dy * ghost.speed;
-        });
-    }
+//                 // Verifica se a próxima posição NÃO é uma parede
+//                 if (map[row][col] !== 1) {
+//                     let dist = Math.sqrt((nextX - pacman.x) ** 2 + (nextY - pacman.y) ** 2);
+//                     if (dist < bestDist) {
+//                         bestDist = dist;
+//                         bestDx = dir.dx;
+//                         bestDy = dir.dy;
+//                     }
+//                 }
+//             });       
+//             // Atualiza posição do fantasma
+//             ghost.dx = bestDx;
+//             ghost.dy = bestDy;
+//             ghost.x += ghost.dx * ghost.speed;
+//             ghost.y += ghost.dy * ghost.speed;
+//         });
+//     }
 
         function gameLoop() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawMap();
             movePacMan();
-            moveGhosts();
+            // moveGhosts();
             checkCollision();
             drawPacMan();
             drawGhosts();
