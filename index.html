@@ -1,73 +1,86 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pac-Man</title>
     <style>
-        body { text-align: center; font-family: Arial, sans-serif; background-color: rgb(19, 19, 19); }
-        canvas { background-color: black; }
-        #score{
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: rgb(19, 19, 19);
+        }
+
+        canvas {
+            background-color: black;
+        }
+
+        #score {
             color: white;
         }
     </style>
 </head>
+
 <body>
     <h2 id="score">Pontuação: <span id="score">0</span></h2>
     <canvas id="gameCanvas" width="992" height="578">
-        
+
     </canvas>
     <script>
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
         const tileSize = 32;
         const bolSize = 27;
-        const wall = 20;
         let score = 0;
 
-        const pacman = { 
+        const pacman = {
             x: 14 * tileSize,
-            y: 15 * tileSize, 
+            y: 15 * tileSize,
             size: bolSize / 2.5,
             speed: 2.5,
             dx: 2.5,
             dy: 0
-         };
+        };
 
         const ghosts = [
-            { 
-            x: 14 * tileSize,
-            y: 9 * tileSize, 
-            size: bolSize / 2.5, 
-            speed: 1, 
-            dx: 1, 
-            dy: 0, 
-            color: "red" },
+            {
+                x: 14 * tileSize,
+                y: 9 * tileSize,
+                size: bolSize / 2.5,
+                speed: 1,
+                dx: 1,
+                dy: 0,
+                color: "red"
+            },
 
             {
-            x: 16 * tileSize,
-            y: 9 * tileSize,
-            size: bolSize / 2.5, 
-            speed: 1, 
-            dx: -1, 
-            dy: 0, 
-            color: "pink" },
+                x: 16 * tileSize,
+                y: 9 * tileSize,
+                size: bolSize / 2.5,
+                speed: 1,
+                dx: -1,
+                dy: 0,
+                color: "pink"
+            },
             {
-            x: 15 * tileSize,
-            y: 9 * tileSize,
-            size: bolSize / 2.5, 
-            speed: 1, 
-            dx: -1, 
-            dy: 0, 
-            color: "blue" },
+                x: 15 * tileSize,
+                y: 9 * tileSize,
+                size: bolSize / 2.5,
+                speed: 1,
+                dx: -1,
+                dy: 0,
+                color: "blue"
+            },
             {
-            x: 15 * tileSize,
-            y: 8 * tileSize,
-            size: bolSize / 2.5, 
-            speed: 1, 
-            dx: -1, 
-            dy: 0, 
-            color: "aqua" }
+                x: 15 * tileSize,
+                y: 8 * tileSize,
+                size: bolSize / 2.5,
+                speed: 1,
+                dx: -1,
+                dy: 0,
+                color: "aqua"
+            }
         ];
 
         const map = [
@@ -81,7 +94,7 @@
             [3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
             [4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6],
             [1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 1, 1, 1l, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -103,7 +116,11 @@
                         ctx.fillStyle = "white";
                         ctx.beginPath();
                         ctx.arc(col * tileSize + tileSize / 2, row * tileSize + tileSize / 2, 4, 0, Math.PI * 2);
-                        ctx.fill();}
+                        ctx.fill();
+                    } else if (map[row][col] === 3) {
+                        ctx.fillStyle = 'black';
+                        ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
+                    }
                 }
             }
         }
@@ -147,15 +164,32 @@
                 }
             });
         }
-        // function pacmanDontMove(){
-        //     const col = Math.floor(pacman.x / tileSize);
-        //     const row = Math.floor(pacman.y / tileSize);
+        function pacmanDontMove() {
+            const col = Math.floor(pacman.x / tileSize);
+            const row = Math.floor(pacman.y / tileSize);
 
-        //     if(map[row][col] === 3){
-        //     }
-        
-        // }
-        
+            if (map[row][col] === 3) {
+                //Linha 7, Coluna 31, Teleportando pro 5
+                pacman.x = 31 * tileSize;
+                pacman.y = 7 * tileSize;
+            }
+             else if (map[row][col] === 5) {
+                //Linha 7, Coluna 0, Teleportando pro 3
+                pacman.x = 1 * tileSize;
+                pacman.y = 7 * tileSize;
+            }
+            //  else if (map[row][col] === 4) {
+            //     //Linha 8, Coluna 31, Teleportando pro 6
+            //     pacman.x = 31 * tileSize;
+            //     pacman.y = 8 * tileSize;
+            // }
+            //  else if (map[row][col] === 6) {
+            //     //Linha 8, Coluna 0, Teleportando pro 4
+            //     pacman.x = 1 * tileSize;
+            //     pacman.y = 8 * tileSize;
+            // }
+        }
+
         function checkCollision() {
             const col = Math.floor(pacman.x / tileSize);
             const row = Math.floor(pacman.y / tileSize);
@@ -177,49 +211,49 @@
                 }
             });
         }
-function moveGhosts() {
-        ghosts.forEach(ghost => {
-            let bestDx = 0, bestDy = 0;
-            let bestDist = Infinity;
+        function moveGhosts() {
+            ghosts.forEach(ghost => {
+                let bestDx = 0, bestDy = 0;
+                let bestDist = Infinity;
 
-            // Testa as 4 direções (cima, baixo, esquerda, direita)
-            let directions = [
-                { dx: -1, dy: 0 }, // Esquerda
-                { dx: 1, dy: 0 },  // Direita
-                { dx: 0, dy: -1 }, // Cima
-                { dx: 0, dy: 1 }   // Baixo
-            ];
+                // Testa as 4 direções (cima, baixo, esquerda, direita)
+                let directions = [
+                    { dx: -1, dy: 0 }, // Esquerda
+                    { dx: 1, dy: 0 },  // Direita
+                    { dx: 0, dy: -1 }, // Cima
+                    { dx: 0, dy: 1 }   // Baixo
+                ];
 
-            directions.forEach(dir => {
-                let nextX = ghost.x + dir.dx * tileSize;
-                let nextY = ghost.y + dir.dy * tileSize;
-                let col = Math.floor(nextX / tileSize);
-                let row = Math.floor(nextY / tileSize);
+                directions.forEach(dir => {
+                    let nextX = ghost.x + dir.dx * tileSize;
+                    let nextY = ghost.y + dir.dy * tileSize;
+                    let col = Math.floor(nextX / tileSize);
+                    let row = Math.floor(nextY / tileSize);
 
-                // Verifica se a próxima posição NÃO é uma parede
-                if (map[row][col] !== 1) {
-                    let dist = Math.sqrt((nextX - pacman.x) ** 2 + (nextY - pacman.y) ** 2);
-                    if (dist < bestDist) {
-                        bestDist = dist;
-                        bestDx = dir.dx;
-                        bestDy = dir.dy;
+                    // Verifica se a próxima posição NÃO é uma parede
+                    if (map[row][col] !== 1) {
+                        let dist = Math.sqrt((nextX - pacman.x) ** 2 + (nextY - pacman.y) ** 2);
+                        if (dist < bestDist) {
+                            bestDist = dist;
+                            bestDx = dir.dx;
+                            bestDy = dir.dy;
+                        }
                     }
-                }
-            });       
-            // Atualiza posição do fantasma
-            ghost.dx = bestDx;
-            ghost.dy = bestDy;
-            ghost.x += ghost.dx * ghost.speed;
-            ghost.y += ghost.dy * ghost.speed;
-        });
-    }
+                });
+                // Atualiza posição do fantasma
+                ghost.dx = bestDx;
+                ghost.dy = bestDy;
+                ghost.x += ghost.dx * ghost.speed;
+                ghost.y += ghost.dy * ghost.speed;
+            });
+        }
 
         function gameLoop() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawMap();
             movePacMan();
             // moveGhosts();
-            // pacmanDontMove();
+            pacmanDontMove();
             checkCollision();
             drawPacMan();
             drawGhosts();
@@ -228,9 +262,9 @@ function moveGhosts() {
 
         document.addEventListener("keydown", (event) => {
             if (event.key === "ArrowUp" || event.key === 'w') { pacman.dx = 0; pacman.dy = -pacman.speed; }
-            if (event.key === "ArrowDown"|| event.key === 's') { pacman.dx = 0; pacman.dy = pacman.speed; }
-            if (event.key === "ArrowLeft"|| event.key === 'a') { pacman.dx = -pacman.speed; pacman.dy = 0; }
-            if (event.key === "ArrowRight"|| event.key ==='d') { pacman.dx = pacman.speed; pacman.dy = 0; }
+            if (event.key === "ArrowDown" || event.key === 's') { pacman.dx = 0; pacman.dy = pacman.speed; }
+            if (event.key === "ArrowLeft" || event.key === 'a') { pacman.dx = -pacman.speed; pacman.dy = 0; }
+            if (event.key === "ArrowRight" || event.key === 'd') { pacman.dx = pacman.speed; pacman.dy = 0; }
         });
 
         // document.addEventListener("keyup", () => { pacman.dx = 0; pacman.dy = 0; });
@@ -238,4 +272,5 @@ function moveGhosts() {
         gameLoop();
     </script>
 </body>
+
 </html>
