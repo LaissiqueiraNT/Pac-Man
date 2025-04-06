@@ -18,11 +18,11 @@ const sounds = {
     ghosts: new Audio('./sounds/ghosts.wav'),
     police: new Audio('./sounds/police.wav')
 };
-sounds.waka.volume = 0.1;     // 50% do volume
-sounds.powerUp.volume = 0.1;  // 70% do volume
-sounds.death.volume = 0.1;    // 80% do volume
-sounds.intro.volume = 0.1;    // Volume máximo
-sounds.ghosts.volume = 0.1;   // 60% do volume
+sounds.waka.volume = 0.1;    
+sounds.powerUp.volume = 0.1;  
+sounds.death.volume = 0.1;    
+sounds.intro.volume = 0.1;   
+sounds.ghosts.volume = 0.1;   
 sounds.police.volume = 0.1;
 
 const pacman = {
@@ -180,10 +180,10 @@ function moveGhosts() {
         let bestDist = ghost.scared ? -Infinity : Infinity;
 
         const directions = [
-            { dx: -1, dy: 0 }, // Esquerda
-            { dx: 1, dy: 0 },  // Direita
-            { dx: 0, dy: -1 }, // Cima
-            { dx: 0, dy: 1 }   // Baixo
+            { dx: -1, dy: 0 }, // esquerda
+            { dx: 1, dy: 0 },  // direita
+            { dx: 0, dy: -1 }, // cima
+            { dx: 0, dy: 1 }   // baixo
         ];
 
         directions.forEach(dir => {
@@ -192,7 +192,6 @@ function moveGhosts() {
 
             const halfSize = tileSize / 2 - 2;
 
-            // Verifica os cantos do fantasma
             const corners = [
                 { x: nextX - halfSize, y: nextY - halfSize },
                 { x: nextX + halfSize, y: nextY - halfSize },
@@ -203,7 +202,7 @@ function moveGhosts() {
             const isValid = corners.every(corner => {
                 const col = Math.floor(corner.x / tileSize);
                 const row = Math.floor(corner.y / tileSize);
-                return map[row] && map[row][col] !== 1; // Verifica se não é uma parede
+                return map[row] && map[row][col] !== 1; 
             });
 
             if (isValid) {
@@ -223,13 +222,12 @@ function moveGhosts() {
             }
         });
 
-        // Move o fantasma para a nova posição válida
+        
         const newX = ghost.x + bestDx * ghost.speed;
         const newY = ghost.y + bestDy * ghost.speed;
 
         const halfSize = tileSize / 2 - 2;
 
-        // Verifica novamente os cantos antes de mover
         const corners = [
             { x: newX - halfSize, y: newY - halfSize },
             { x: newX + halfSize, y: newY - halfSize },
@@ -240,7 +238,7 @@ function moveGhosts() {
         const canMove = corners.every(corner => {
             const col = Math.floor(corner.x / tileSize);
             const row = Math.floor(corner.y / tileSize);
-            return map[row] && map[row][col] !== 1; // Verifica se não é uma parede
+            return map[row] && map[row][col] !== 1; 
         });
 
         if (canMove) {
@@ -300,21 +298,21 @@ function pacmanTeleports() {
     const row = Math.floor(pacman.y / tileSize);
 
     if (map[row][col] === 4) {
-        //Linha 8, Coluna 30, Teleportando pro 6
+        //Linha 8.5, Coluna 30, Teleportando pro 6
         pacman.x = 30 * tileSize;
         pacman.y = 8.5 * tileSize;
     }
     else if (map[row][col] === 6) {
-        //Linha 8, Coluna 1, Teleportando pro 4
+        //Linha 8.5, Coluna 1, Teleportando pro 4
         pacman.x = 1 * tileSize;
         pacman.y = 8.5 * tileSize;
     }if (map[row][col] === 4) {
-        //Linha 8, Coluna 30, Teleportando pro 6
+        //Linha 8.5, Coluna 30, Teleportando pro 6
         ghosts.x = 30 * tileSize;
         ghosts.y = 8.5 * tileSize;
     }
     else if (map[row][col] === 6) {
-        //Linha 8, Coluna 1, Teleportando pro 4
+        //Linha 8.5, Coluna 1, Teleportando pro 4
         ghosts.x = 1 * tileSize;
         ghosts.y = 8.5 * tileSize;
     }
